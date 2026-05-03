@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Warga RT 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --dark: #0f172a;
+            --success: #22c55e;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Header & Animasi Teks */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 30px 20px 50px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .running-text-container {
+            background: #1e293b;
+            color: #fbbf24;
+            padding: 8px 0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-bottom: 1px solid #334155;
+        }
+
+        marquee { vertical-align: middle; }
+
+        .container {
+            max-width: 500px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 { font-size: 1.1rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #64748b; }
+        
+        input, textarea, select {
+            width: 100%; padding: 12px; border: 1.5px solid #e2e8f0;
+            border-radius: 12px; font-size: 0.95rem; box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        button {
+            background: var(--primary); color: white; border: none; width: 100%;
+            padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: 0.3s; margin-top: 10px;
+        }
+
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .wa-btn {
+            display: flex; align-items: center; gap: 15px;
+            background: #f0fdf4; border: 2px solid #bbf7d0;
+            padding: 15px; border-radius: 15px; text-decoration: none; color: #166534;
+        }
+
+        .history-item { padding: 15px; border-bottom: 1px solid #f1f5f9; }
+        .status { font-size: 0.6rem; padding: 4px 10px; border-radius: 20px; font-weight: 800; text-transform: uppercase; }
+        .terkirim { background: #dcfce7; color: #166534; }
+        .proses { background: #fef9c3; color: #854d0e; }
+        .selesai { background: #dbeafe; color: #1e40af; }
+
+        footer { text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 30px; padding-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<!-- Animasi Tulisan Menyamping -->
+<div class="running-text-container">
+    <marquee scrollamount="5">
+        📢 INFO RT 10: Mohon jaga keamanan lingkungan • Gunakan aplikasi ini untuk laporan resmi • Pastikan membuang sampah pada tempatnya • Selalu cek secara berkala laopran anda.
+    </marquee>
+</div>
+
+<header>
+    <h1 style="margin:0; font-size: 1.5rem;">RT 10/06</h1>
+    <p style="font-size: 0.8rem; opacity: 0.7;">Sistem Laporan Warga Digital</p>
+    <div id="db-status" style="font-size: 0.7rem; margin-top: 10px;">
+        <i class="fas fa-circle" id="ind"></i> <span id="text-ind">Menyambungkan...</span>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Form Input -->
+    <div class="card">
+        <h2><i class="fas fa-pen"></i> Form Laporan</h2>
+        <form id="laporForm">
+            <div class="form-group">
+                <label>NAMA LENGKAP</label>
+                <input type="text" id="nama" placeholder="Contoh: Kartini" required>
+            </div>
+            <div class="form-group">
+                <label>ALAMAT / NO. RUMAH</label>
+                <input type="text" id="alamat" placeholder="Contoh: No. 10A" required>
+            </div>
+            <div class="form-group">
+                <label>KATEGORI LAPORAN</label>
+                <select id="kategori">
+                    <option value="Keamanan">🚨 Keamanan</option>
+                    <option value="Kebersihan">🧹 Kebersihan Lingkungan</option>
+                    <option value="Fasilitas">🛠️ Fasilitas Umum (Lampu/Jalan)</option>
+                    <option value="Kesehatan">🏥 Kesehatan / Fogging</option>
+                    <option value="Sosial">🤝 Kegiatan Sosial</option>
+                    <option value="Saran">💡 Saran / Masukan</option>
+                    <option value="Lainnya">📝 Lain-lain</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ISI PESAN LAPORAN</label>
+                <textarea id="pesan" rows="4" placeholder="Jelaskan detail masalah..." required></textarea>
+            </div>
+            <button type="submit" id="btnKirim">Laporkan
+            </button>
+        </form>
+    </div>
+
+    <!-- Kontak Darurat -->
+    <div class="card">
+        <h2><i class="fas fa-phone-alt"></i> Kontak Darurat</h2>
+        <a href="https://wa.me/6289651591315?text=DARURAT%20RT%2010%3A%20Saya%20butuh%20bantuan%20segera!" target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp" style="font-size: 1.5rem; color: var(--success);"></i>
+            <div>
+                <strong style="display:block">WhatsApp Admin RT</strong>
+                <small>Klik untuk bantuan darurat 24 Jam</small>
+            </div>
+        </a>
+<br>
+         <a href="https://wa.me/6287765829615?text=DARURAT%20RT%2010%3A%20Saya%20butuh%20bantuan%20segera!" target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp" style="font-size: 1.5rem; color: var(--success);"></i>
+            <div>
+                <strong style="display:block">WhatsApp Admin Website</strong>
+                <small>Klik untuk bantuan darurat 24 Jam</small>
+            </div>
+        </a>
+    </div>
+
+    <!-- Riwayat -->
+    <div class="card">
+        <h2><i class="fas fa-history"></i> Laporan Terbaru</h2>
+        <div id="display-data">
+            <p style="text-align:center; font-size:0.8rem; color:#94a3b8;">Memuat database...</p>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 E-Lapor RT 10 RW 06</footer>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxjGXzoLTR549yembXBlpDd_SR5ffyR1YojecLe5bPL0t7WViWbgbR5QJ2zutXhMLfTdw/exec";
+
+    async function getDatabase() {
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            document.getElementById('ind').style.color = "#22c55e";
+            document.getElementById('text-ind').innerText = "Database Terhubung";
+            render(data);
+        } catch (e) {
+            document.getElementById('ind').style.color = "#ef4444";
+            document.getElementById('text-ind').innerText = "Koneksi Bermasalah";
+        }
+    }
+
+    function render(data) {
+        const container = document.getElementById('display-data');
+        container.innerHTML = "";
+        if (!data || data.length === 0) {
+            container.innerHTML = "<p style='text-align:center; font-size:0.8rem;'>Belum ada laporan masuk.</p>";
+            return;
+        }
+        data.reverse().slice(0, 5).forEach(item => {
+            // Logika warna status
+            let statusClass = "terkirim";
+            let statusText = item.status || "Terkirim";
+            if(statusText.toLowerCase() === "proses") statusClass = "proses";
+            if(statusText.toLowerCase() === "selesai") statusClass = "selesai";
+
+            container.innerHTML += `
+                <div class="history-item">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <small style="font-weight:800; color:var(--primary)">#${item.id}</small>
+                        <span class="status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div style="font-weight:600; margin:5px 0; font-size:0.9rem;">${item.pesan}</div>
+                    <small style="color:#94a3b8;">Kategori: ${item.kategori} | Dari: ${item.nama}</small>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById('laporForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnKirim');
+        btn.disabled = true;
+        btn.innerText = "Sedang Mengirim...";
+
+        // Buat ID Tiket Unik
+        const ticketID = "RT10-" + Math.floor(Math.random() * 9000 + 1000);
+
+        const payload = {
+            id: ticketID,
+            nama: document.getElementById('nama').value,
+            alamat: document.getElementById('alamat').value,
+            kategori: document.getElementById('kategori').value,
+            pesan: document.getElementById('pesan').value
+        };
+
+        try {
+            // 1. Simpan ke Google Sheets
+            await fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            });
+            
+            // 2. Format pesan WA (Ada ID Tiketnya)
+            const waText = `*LAPORAN WARGA RT 10*%0A---------------------------%0A*ID TIKET:* ${payload.id}%0A*PENGIRIM:* ${payload.nama}%0A*ALAMAT:* ${payload.alamat}%0A*KATEGORI:* ${payload.kategori}%0A*LAPORAN:* ${payload.pesan}%0A---------------------------%0A_Mohon segera ditindaklanjuti, terima kasih._`;
+            
+            // 3. Buka WhatsApp
+            window.open(`https://wa.me/6289651591315?text=${waText}`, '_blank');
+            
+            document.getElementById('laporForm').reset();
+            setTimeout(getDatabase, 2000);
+        } catch (err) {
+            alert("Terjadi kesalahan teknis.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Laporkan";
+        }
+    });
+
+    getDatabase();
+    setInterval(getDatabase, 15000); // Update otomatis tiap 15 detik
+</script>
+
+</body>
+</html>
